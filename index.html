@@ -136,11 +136,18 @@ button{font-family:inherit;border:none;cursor:pointer;color:inherit;touch-action
 .sabtns{display:flex;gap:16px}
 .sabtns .bin{max-width:none;min-width:clamp(150px,22vw,300px)}
 
-.venn{position:relative;width:min(820px,94vw);aspect-ratio:1.6;background:#fff;border-radius:26px;box-shadow:0 8px 0 #8fc6dc;cursor:pointer;overflow:hidden}
-.venn .vc{position:absolute;width:56%;aspect-ratio:1;top:50%;translate:0 -50%;border-radius:50%;border:5px solid;pointer-events:none}
-.venn .va{left:10%;background:rgba(43,176,214,.18);border-color:#2bb0d6}.venn .vb{left:34%;background:rgba(255,138,61,.18);border-color:#ff8a3d}
+.venn{position:relative;width:min(900px,94vw);aspect-ratio:2.2;border:5px dashed #b9c8d4;background:#fff;border-radius:26px;box-shadow:0 8px 0 #8fc6dc;cursor:pointer;overflow:hidden}
+.venn .vc{position:absolute;width:41%;aspect-ratio:1;top:50%;translate:0 -50%;border-radius:50%;border:5px solid;pointer-events:none}
+.venn .va{left:17.5%;background:rgba(43,176,214,.18);border-color:#2bb0d6}.venn .vb{left:41.5%;background:rgba(255,138,61,.18);border-color:#ff8a3d}
 .venn .vl{position:absolute;top:2%;font-weight:900;font-size:clamp(16px,2vw,26px);padding:2px 12px;border-radius:12px;color:#fff;pointer-events:none}
-.venn .la{left:14%;background:#2bb0d6}.venn .lb{right:14%;background:#ff8a3d}
+.venn .la{left:22%;background:#2bb0d6}.venn .lb{right:22%;background:#ff8a3d}
+.venn .vo{position:absolute;top:4%;width:15%;text-align:center;font-weight:900;font-size:clamp(11px,1.4vw,17px);color:#8a9aa8;line-height:1.1;pointer-events:none}.venn .vol{left:1%}.venn .vor{right:1%}
+.vbtns{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;width:min(900px,94vw)}
+.vbt{border-radius:16px;padding:12px 6px;font-weight:900;font-size:clamp(14px,1.7vw,22px);color:#fff;box-shadow:0 5px 0 rgba(0,0,0,.2);line-height:1.15}
+.vbt:active{transform:translateY(4px);box-shadow:0 1px 0 rgba(0,0,0,.2)}
+.vbt.zA{background:#2bb0d6}.vbt.zAB{background:#8e7cc3}.vbt.zB{background:#ff8a3d}.vbt.zO{background:#7d8b97}
+.howto2{color:#fff;font-weight:800;font-size:clamp(14px,1.5vw,18px);opacity:.9}
+@media(max-width:760px){.vbtns{grid-template-columns:1fr 1fr}}
 .venn .vz{display:none}
 .venn .vi{position:absolute;translate:-50% -50%;font-size:clamp(22px,3vw,42px);font-weight:900;pointer-events:none;color:var(--ink)}
 .venn .vn{position:absolute;translate:-50% -50%;font-size:clamp(34px,4.6vw,64px);font-weight:900;background:var(--yel);border-radius:16px;padding:0 14px;pointer-events:none}
@@ -284,15 +291,16 @@ const VTXT=[{A:'Футбол',B:'Шахмат',t:(N,a,b,c)=>`Сыныпта ${N}
  {A:'Ағылшын тілі',B:'Робототехника',t:(N,a,b,c)=>`Орталықта ${N} бала оқиды. ${a} бала ағылшын тіліне, ${b} бала робототехникаға барады. ${c} бала екеуіне де барады.`}];
 const VNAME=(z,t)=>({A:`тек «${t.A}»`,B:`тек «${t.B}»`,AB:'екеуіне де',O:'ешқайсысына'})[z];
 function venn(box,A,B){const wrap=el('div','venn'),api={wrap};
-  wrap.innerHTML=`<div class="vc va"></div><div class="vc vb"></div><div class="vl la">${A}</div><div class="vl lb">${B}</div><div class="vz" data-z="A"></div><div class="vz" data-z="AB"></div><div class="vz" data-z="B"></div><div class="vz" data-z="O"></div>`;box.append(wrap);
-  const P={A:[.22,.55],AB:[.5,.55],B:[.78,.55],O:[.07,.12]},cnt={A:0,AB:0,B:0,O:0};
-  const zone=(x,y)=>{const r=wrap.getBoundingClientRect(),w=r.width,h=r.height,px=x-r.left,py=y-r.top,R=.28*w;
+  wrap.innerHTML=`<div class="vc va"></div><div class="vc vb"></div><div class="vl la">${A}</div><div class="vl lb">${B}</div><div class="vo vol">ешқай&shy;сысы</div><div class="vo vor">ешқай&shy;сысы</div>`;box.append(wrap);
+  api.buttons=()=>{const r=el('div','vbtns');[['A',`Тек «${A}»`],['AB','Екеуіне де'],['B',`Тек «${B}»`],['O','🚫 Ешқайсысына']].forEach(([z,t])=>{const b=el('button','vbt z'+z,t);b.onclick=()=>api.onPick&&api.onPick(z);r.append(b)});box.append(r)};
+  const P={A:[.27,.5],AB:[.5,.5],B:[.73,.5],O:[.085,.5]},cnt={A:0,AB:0,B:0,O:0};
+  const zone=(x,y)=>{const r=wrap.getBoundingClientRect(),w=r.width,h=r.height,px=x-r.left,py=y-r.top,R=.205*w;
     const ia=Math.hypot(px-.38*w,py-h/2)<=R,ib=Math.hypot(px-.62*w,py-h/2)<=R;return ia&&ib?'AB':ia?'A':ib?'B':'O'};
   wrap.addEventListener('click',e=>{if(api.onPick)api.onPick(zone(e.clientX,e.clientY),e.clientX,e.clientY)});
-  const SL={A:[[.21,.36],[.21,.64],[.28,.5],[.14,.5],[.27,.27],[.27,.73]],AB:[[.5,.36],[.5,.64],[.5,.5],[.5,.24],[.5,.78]],
-    B:[[.79,.36],[.79,.64],[.72,.5],[.86,.5],[.73,.27],[.73,.73]],O:[[.05,.2],[.95,.2],[.05,.82],[.95,.82],[.05,.5],[.95,.5]]};
+  const SL={A:[[.26,.33],[.26,.67],[.21,.5],[.32,.5],[.29,.2],[.29,.8]],AB:[[.5,.33],[.5,.67],[.5,.5],[.5,.18],[.5,.82]],
+    B:[[.74,.33],[.74,.67],[.79,.5],[.68,.5],[.71,.2],[.71,.8]],O:[[.085,.3],[.915,.3],[.085,.7],[.915,.7],[.085,.5],[.915,.5]]};
   api.put=(z,txt)=>{const sl=SL[z][cnt[z]%SL[z].length];cnt[z]++;const s=el('span','vi pop',txt);s.style.left=sl[0]*100+'%';s.style.top=sl[1]*100+'%';wrap.append(s)};
-  api.num=(z,v)=>{const s=el('span','vn pop',v);s.style.left=P[z][0]*100+'%';s.style.top=P[z][1]*100+'%';if(z==='O'){s.style.left='7%';s.style.top='88%'}wrap.append(s)};
+  api.num=(z,v)=>{const s=el('span','vn pop',v);s.style.left=P[z][0]*100+'%';s.style.top=P[z][1]*100+'%';wrap.append(s)};
   api.hl=z=>{wrap.querySelectorAll('.vz').forEach(e=>e.classList.toggle('on',e.dataset.z===z))};return api}
 /* ===== GAMES ===== */
 const GAMES=[
@@ -379,7 +387,7 @@ const GAMES=[
  render(t,box,ok,bad){const v=venn(box,t.A,t.B);
    if(t.items){box.prepend(el('div','title',CL===0?'Суретті диаграмманың дұрыс жеріне қой':'Санды диаграмманың дұрыс жеріне қой'));let i=0;const cur=el('div','word vcur');box.insertBefore(cur,v.wrap);
      const show=()=>{cur.textContent=t.items[i].e;reanim(cur,'pop')};show();
-     v.onPick=(z,x,y)=>{const it=t.items[i];if(!it)return;if(z===it.r){beep('tap');v.put(z,it.e)}else{bad();beep('bad');flash('Дұрысы: '+VNAME(z===it.r?z:it.r,t));reanim(cur,'shake');v.put(it.r,it.e)}
+     v.buttons();box.append(el('div','howto2','Диаграмманың ішін немесе төмендегі батырманы бас'));v.onPick=(z,x,y)=>{const it=t.items[i];if(!it)return;if(z===it.r){beep('tap');v.put(z,it.e)}else{bad();beep('bad');flash('Дұрысы: '+VNAME(z===it.r?z:it.r,t));reanim(cur,'shake');v.put(it.r,it.e)}
        i++;if(i>=t.items.length){cur.textContent='✔';ok()}else show()};return}
    box.prepend(el('div','panel txt',t.txt));v.num('AB',t.c);let k=0;const q=el('div','title'),op=el('div','opts');box.append(q,op);
    const step=()=>{const [name,z,ans,tr]=t.steps[k];v.hl(z);q.innerHTML=`<b style="color:#ffc233">${name}</b> — неше?`;

@@ -225,13 +225,13 @@ function confetti(){const my=++CF,c=$('#cf'),x=c.getContext('2d');c.width=innerW
   (function f(){x.clearRect(0,0,c.width,c.height);if(my!==CF)return;P.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.r+=p.vr;x.save();x.translate(p.x,p.y);x.rotate(p.r);x.fillStyle=p.c;x.fillRect(-p.s/2,-p.s/4,p.s,p.s/2);x.restore()});requestAnimationFrame(f)})()}
 
 /* ===== access code ===== */
-const GH='d89a83dad812e7e7a5a641eabcd7ab22e393b0706d5bd6b60e136860681f0195';
+const GH=["d89a83dad812e7e7a5a641eabcd7ab22e393b0706d5bd6b60e136860681f0195", "0b8d6fc03072694736c3a6576575ff6f81ec27856594cfcabdbdb644ad3da965", "4a268e6b0c1a908eadd47f5453728c85e036d4cefb7e8b31e300b353a4397fc5"];
 async function sha(s){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode('bilimaraly:'+s.trim().toUpperCase()));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}
-async function tryCode(c){if(await sha(c)===GH){try{localStorage.setItem('ba_ok',GH)}catch(e){}$('#gate').classList.add('off');return true}$('#ge').textContent='Код қате. Қайта тексеріңіз.';reanim($('#gc'),'shake');return false}
+async function tryCode(c){{const h=await sha(c);if(GH.includes(h)){try{localStorage.setItem('ba_ok',h)}catch(e){}$('#gate').classList.add('off');return true}$('#ge').textContent='Код қате. Қайта тексеріңіз.';reanim($('#gc'),'shake');return false}}
 function logout(){try{localStorage.removeItem('ba_ok')}catch(e){}location.href=location.pathname}
 $('#gf').onsubmit=e=>{e.preventDefault();const v=$('#gc').value;if(v.trim())tryCode(v)};
 (()=>{let ok=null;try{ok=localStorage.getItem('ba_ok')}catch(e){}const q=new URLSearchParams(location.search).get('code');
-  if(ok===GH)$('#gate').classList.add('off');else if(q)tryCode(q);else setTimeout(()=>$('#gc').focus(),100)})();
+  if(GH.includes(ok))$('#gate').classList.add('off');else if(q)tryCode(q);else setTimeout(()=>$('#gc').focus(),100)})();
 
 /* ===== progress ===== */
 const LV=['🟢 Жеңіл','🟡 Орташа','🔴 Қиын'];

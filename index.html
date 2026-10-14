@@ -387,7 +387,7 @@ function drawHome(){const gr=$('#groups');gr.innerHTML='';let tot=0;
   ['🧮 Математика','📖 Қазақ тілі'].forEach((name,si)=>{const s=el('div','sec',`<h2>${name}</h2>`),cs=el('div','cards');s.append(cs);gr.append(s);
     GAMES.filter(g=>g.sec===si).forEach(g=>{const sv=starsOf(g.id);tot+=sv.reduce((a,b)=>a+b,0);
       const c=el('div','card',`<div class="top"><div class="ic">${g.icon}</div><div><div class="t">${g.title}</div><div class="s">${g.sub}</div></div></div>`);c.querySelector('.top').style.cssText=`--c1:${g.c1};--c2:${g.c2}`;
-      const lv=el('div','lvls');[0,1,2].forEach(l=>{const lock=l>0&&!sv[l-1];const b=el('button','lv'+(lock?' lock':''),`${LV[l]}<span class="st">${lock?'🔒':'⭐'.repeat(sv[l])+'☆'.repeat(3-sv[l])}</span>`);
+      const lv=el('div','lvls');[0,1,2].forEach(l=>{const lock=false;const b=el('button','lv'+(lock?' lock':''),`${LV[l]}<span class="st">${lock?'🔒':'⭐'.repeat(sv[l])+'☆'.repeat(3-sv[l])}</span>`);
         b.onclick=()=>{if(lock){flash('Алдымен алдыңғы деңгейді өт 🙂');return}beep('tap');play(g,l)};lv.append(b)});c.append(lv);cs.append(c)})});
   $('#total').textContent=`⭐ ${tot} / ${GAMES.length*9}`}
 drawHome();

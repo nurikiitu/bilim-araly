@@ -404,7 +404,7 @@ const GAMES=[
 
 /* 7. Complex equations */
 {id:'ce',sec:0,icon:'🧮',title:'Күрделі теңдеу',sub:'Теңдеуді қадам бойынша шеш',c1:'#ff8a3d',c2:'#7b5cff',delay:1800,win:'Теңдеулерді шештің! 🧮',
- make(l){return Array.from({length:4},()=>ceqTask(l))},
+ make(l){const out=[],seen=new Set();let g=0;while(out.length<10&&g++<500){const t=ceqTask(l);const key=t.eq.replace(/\d+/g,'#');if(seen.has(t.eq)||(out.filter(x=>x.eq.replace(/\d+/g,'#')===key).length>=3))continue;seen.add(t.eq);out.push(t)}return out},
  render(t,box,ok,bad){const F=n=>typeof n==='number'?n.toLocaleString('ru-RU'):n;
    box.append(el('div','panel',`<div class="q" style="font-size:clamp(34px,4.6vw,70px)">${t.eq}</div>`));
    const sol=el('div','sol');box.append(sol);const q=el('div','title'),op=el('div','opts ceo');box.append(q,op);let k=0;

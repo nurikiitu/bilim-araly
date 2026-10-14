@@ -153,6 +153,11 @@ button{font-family:inherit;border:none;cursor:pointer;color:inherit;touch-action
 .venn .vn{position:absolute;translate:-50% -50%;font-size:clamp(34px,4.6vw,64px);font-weight:900;background:var(--yel);border-radius:16px;padding:0 14px;pointer-events:none}
 .vcur{min-width:120px;text-align:center}
 #flash.long{white-space:normal}
+.sol{display:flex;flex-direction:column;align-items:center;gap:6px}
+.sl{background:rgba(255,255,255,.92);border-radius:14px;padding:4px 18px;font-size:clamp(22px,2.8vw,40px);font-weight:900}
+.sl.fin{background:var(--yel)}.sl.ck{background:var(--grn);color:#fff;font-size:clamp(16px,2vw,28px)}
+.ceo{flex-direction:column;align-items:center}
+.pad2{display:flex;flex-direction:column;align-items:center;gap:10px}
 /* final */
 #final{position:fixed;inset:0;background:rgba(8,40,70,.6);display:none;align-items:center;justify-content:center;z-index:20;padding:16px}
 #final.on{display:flex}
@@ -279,6 +284,27 @@ const SYN=[['батыр','ер'],['әдемі','сұлу'],['үлкен','зор
 const ANT=[['үлкен','кіші'],['жақсы','жаман'],['ыстық','суық'],['ақ','қара'],['биік','аласа'],['ұзын','қысқа'],['ащы','тәтті'],['күндіз','түн'],['жас','кәрі'],['бай','кедей'],['кең','тар'],['жылдам','баяу'],['жоғары','төмен'],['ерте','кеш']];
 
 
+
+/* күрделі теңдеу генераторы */
+const st_=(l,v,w)=>({l,v,w:[...new Set(w.filter(x=>Number.isInteger(x)&&x>0&&x!==v))].slice(0,2)});
+const CEQ=[
+ [()=>{const p=rnd(12,40),q=rnd(4,25),R=p*q;if(R<120)return;const a=rnd(30,R-20),x=R-a;return{eq:`x + ${a} = ${p} · ${q}`,x,steps:[st_(`x + ${a}`,R,[R+p,p*q+q,R-10])]}},
+  ()=>{const p=rnd(12,40),q=rnd(4,25),R=p*q,x=rnd(50,600),B=R+x;return{eq:`${B} − x = ${p} · ${q}`,x,steps:[st_(`${B} − x`,R,[R+q,R-p,R+10])]}},
+  ()=>{const a=rnd(3,9),x=rnd(12,99),Rv=a*x,C=rnd(100,600),B=Rv+C;return{eq:`x · ${a} = ${B} − ${C}`,x,steps:[st_(`x · ${a}`,Rv,[B+C,Rv+10,Rv-10])]}},
+  ()=>{const a=rnd(4,15),k=rnd(12,50),x=a*k,c=rnd(6,30),B=k*c;return{eq:`x : ${a} = ${B} : ${c}`,x,steps:[st_(`x : ${a}`,k,[k+c,k*2,k-2])]}}],
+ [()=>{const x=rnd(10,40),a=rnd(3,9),b=rnd(10,90),R=a*x+b;const ds=[];for(let d=3;d<=50;d++)if(R%d===0&&R/d>=3&&R/d<=50)ds.push(d);if(!ds.length)return;const p=one(ds),q=R/p;
+   return{eq:`${a} · x + ${b} = ${p} · ${q}`,x,steps:[st_(`${a} · x + ${b}`,R,[p+q,R+p,R-q]),st_(`${a} · x`,R-b,[R+b,R-b+a,R-b-10])]}},
+  ()=>{const x=rnd(30,100),a=rnd(5,25),b=rnd(3,9),Rv=(x-a)*b,d=rnd(2,5),C=Rv*d;return{eq:`(x − ${a}) · ${b} = ${C} : ${d}`,x,steps:[st_(`(x − ${a}) · ${b}`,Rv,[C*d,Rv+d,Rv-b]),st_(`x − ${a}`,Rv/b,[Rv-b,Rv/b+a,Rv/b+b])]}},
+  ()=>{const x=rnd(4,15),k=rnd(8,40),B=k*x,c=rnd(10,60),D=k+c,d1=rnd(5,D-5),d2=D-d1;return{eq:`${B} : x + ${c} = ${d1} + ${d2}`,x,steps:[st_(`${B} : x + ${c}`,D,[D+c,d1*d2,D-1]),st_(`${B} : x`,k,[D+c,k+c,k+1])]}},
+  ()=>{const m=rnd(12,40),b=rnd(3,9),a=rnd(10,40),x=m*b-a;if(x<5)return;const p=rnd(3,m-3),q=m-p;return{eq:`(x + ${a}) : ${b} = ${p} + ${q}`,x,steps:[st_(`(x + ${a}) : ${b}`,m,[p*q,m+b,m-1]),st_(`x + ${a}`,m*b,[m+b,m*b+a,m*b-b])]}}],
+ [()=>{const x=rnd(12,60),a=rnd(3,9),c=rnd(2,9),b=(a*x)%c+c*rnd(1,8);if(a*x-b<=0)return;const D=(a*x-b)/c;
+   return{eq:`(x · ${a} − ${b}) : ${c} = ${D}`,x,steps:[st_(`x · ${a} − ${b}`,D*c,[D+c,D*c+b,D*c-c]),st_(`x · ${a}`,D*c+b,[D*c-b,D*c+b+a,D*c+b-10])]}},
+  ()=>{const x=rnd(10,80),a=rnd(20,150),b=rnd(2,6),P=(x+a)*b,C=rnd(50,400),B=P+C;return{eq:`${B} − (x + ${a}) · ${b} = ${C}`,x,steps:[st_(`(x + ${a}) · ${b}`,P,[B+C,P+b,P-10]),st_(`x + ${a}`,P/b,[P-b,P/b+a,P/b+b])]}},
+  ()=>{const x=rnd(5,20),k=rnd(10,40),B=k*x,c=rnd(5,30),d=rnd(2,5),E=(k+c)*d;return{eq:`(${B} : x + ${c}) · ${d} = ${E}`,x,steps:[st_(`${B} : x + ${c}`,k+c,[E-d,(k+c)*2,k+c+d]),st_(`${B} : x`,k,[k+c+c,k*2,k+1])]}},
+  ()=>{const m=rnd(10,60),b=rnd(10,60),x=m+b,a=rnd(2,6),c=rnd(20,90),Rv=a*m+c,q=rnd(2,5),P=Rv*q;return{eq:`${a} · (x − ${b}) + ${c} = ${P} : ${q}`,x,
+   steps:[st_(`${a} · (x − ${b}) + ${c}`,Rv,[P*q,Rv+q,Rv-a]),st_(`${a} · (x − ${b})`,Rv-c,[Rv+c,Rv-c+a,Rv-c-10]),st_(`x − ${b}`,m,[m+a,Rv-c-a,m+b])]}}]];
+function ceqTask(l){for(let g=0;g<200;g++){const t=one(CEQ[l])();if(t&&t.steps.every(s=>s.w.length===2))return t}}
+
 /* venn data */
 const VSETS=[{A:'Ұшады',B:'Суда жүзеді',items:[['🦆','AB'],['🦢','AB'],['🐟','B'],['🐬','B'],['🐢','B'],['🐧','B'],['🐦','A'],['🦋','A'],['🐝','A'],['🦉','A'],['🐕','O'],['🐄','O'],['🐘','O'],['🐈','O']]},
  {A:'Қызыл түсті',B:'Жеуге болады',items:[['🍎','AB'],['🍓','AB'],['🍅','AB'],['🍒','AB'],['🍌','B'],['🥕','B'],['🍞','B'],['🥦','B'],['🚒','A'],['🎈','A'],['❤️','A'],['🧯','A'],['⚽','O'],['📘','O'],['✏️','O'],['🔑','O']]},
@@ -375,6 +401,19 @@ const GAMES=[
      if(ty===1)return{q:`${fmt(n*f)} ${S} = □ ${B}`,ans:n,opts:mk3(n,[n*10,n*100,n*f/10])};
      const b=rnd(1,f-1);return{q:`${n} ${B} ${b} ${S} = □ ${S}`,ans:n*f+b,opts:mk3(n*f+b,[n*f/10+b,n*f*10+b,n*10+b,n+b])}})},
  render(t,box,ok,bad){box.append(el('div','title','Шамаларды өрнекте'),el('div','panel',`<div class="q">${t.q}</div>`));const op=el('div','opts');box.append(op);options(op,t.opts,t.ans,ok,bad)}},
+
+/* 7. Complex equations */
+{id:'ce',sec:0,icon:'🧮',title:'Күрделі теңдеу',sub:'Теңдеуді қадам бойынша шеш',c1:'#ff8a3d',c2:'#7b5cff',delay:1800,win:'Теңдеулерді шештің! 🧮',
+ make(l){return Array.from({length:4},()=>ceqTask(l))},
+ render(t,box,ok,bad){const F=n=>typeof n==='number'?n.toLocaleString('ru-RU'):n;
+   box.append(el('div','panel',`<div class="q" style="font-size:clamp(34px,4.6vw,70px)">${t.eq}</div>`));
+   const sol=el('div','sol');box.append(sol);const q=el('div','title'),op=el('div','opts ceo');box.append(q,op);let k=0;
+   const step=()=>{if(k<t.steps.length){const S=t.steps[k];q.textContent=`${k+1}-қадам: келесі жолды таңда`;
+       const lines=shuffle([S.v,...S.w]).map(v=>`${S.l} = ${F(v)}`);options(op,lines,`${S.l} = ${F(S.v)}`,()=>{sol.append(el('div','sl pop',`${S.l} = ${F(S.v)}`));k++;setTimeout(()=>{op.innerHTML='';step()},500)},bad,'sm');return}
+     q.textContent='x неге тең?';op.innerHTML='';const kp=el('div','pad2');op.append(kp);
+     keypad(kp,(v,d)=>{if(v===t.x){sol.append(el('div','sl pop fin',`x = ${F(t.x)}`));const chk=t.eq.replace(/x/g,F(t.x));sol.append(el('div','sl ck pop',`Тексеру: ${chk} ✓`));kp.remove();q.textContent='';ok()}
+       else{beep('bad');bad();reanim(d,'shake');flash('Қайта есепте 🙂')}})};
+   step()}},
 
 /* 6. Sets / Venn */
 {id:'vn',sec:0,icon:'⭕',title:'Жиындар',sub:'Венн диаграммасы',c1:'#00b4d8',c2:'#7b5cff',delay:1300,win:'Жиындарды меңгердің! ⭕',

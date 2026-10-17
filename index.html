@@ -291,7 +291,7 @@ async function fsPut(code,fps,name){return fetch(FB+encodeURIComponent(code)+'?k
 function tgSend(txt,code){const kb={inline_keyboard:[[{text:'🔓 Firebase-те ашу (рұқсат беру)',url:CONSOLE(code)}]]};
  fetch('https://api.telegram.org/bot'+TG+'/sendMessage?chat_id='+TGID+'&text='+encodeURIComponent(txt)+'&reply_markup='+encodeURIComponent(JSON.stringify(kb)),{mode:'no-cors'})}
 async function devWatch(code,name,fp,line,desc,nolim){try{const fps=await fsGet(code);
-  if(fps.includes(BLK))return 'blocked';
+  if(!nolim&&fps.includes(BLK))return 'blocked';
   if(fps.includes(fp))return 'ok';
   if(nolim||fps.length<LIMIT){fps.push(fp);await fsPut(code,fps,name);return 'ok'}
   const old=fps.slice();fps.push(BLK,fp);await fsPut(code,fps,name);

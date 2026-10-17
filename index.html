@@ -222,7 +222,7 @@ button{font-family:inherit;border:none;cursor:pointer;color:inherit;touch-action
 (function(){const t=document.getElementById('tech');const chk=()=>fetch('status.json?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():null).then(j=>{if(!j)return;t.style.display=j.off?'flex':'none';if(j.off&&j.msg)t.querySelector('p').innerHTML=j.msg}).catch(()=>{});chk();setInterval(chk,30000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk()})})();</script>
 <div id="gate"><form class="gbox" id="gf"><div class="lg">🏝️</div><h1>Білім аралы</h1><p>4-сынып · кіру коды</p>
   <input id="gc" autocomplete="off" spellcheck="false" placeholder="КОД"><button class="btn g">Кіру ➜</button><div class="gerr" id="ge"></div></form></div>
-<script id="gatejs">
+<script id="gatejs">try{localStorage.removeItem('ba_ok')}catch(e){}
 (function(){/* код → иесі, мерзімі (сол күннің соңына дейін) */
 const C={'1b8b0397ce76ed2b5af306d97f1a7052f6bb457facaeb0a4e09a5c64cb4fe86b':{n:'Уақытша (6 сағат)',u:'',k:'499941',e:1792258786061,x:1},'b8bd6f74abcd237e90bd207f0386d456d06269839b008b3019a29a28c286ca7e':{n:'Назерке',u:'',k:'NAZERKE1128'},'846e5541a1468460ddf255863abc14a9f1170ccca092b5ae48bc791ded8e016b':{n:'Айгүл Елжасқызы',u:'',k:'AIGUL4407'},'d89a83dad812e7e7a5a641eabcd7ab22e393b0706d5bd6b60e136860681f0195':{n:'4-сынып (NEURO-4455)',u:'',k:'NEURO-4455'},'0b8d6fc03072694736c3a6576575ff6f81ec27856594cfcabdbdb644ad3da965':{n:'4-сынып (NEURO-4457)',u:'',k:'NEURO-4457'},'4a268e6b0c1a908eadd47f5453728c85e036d4cefb7e8b31e300b353a4397fc5':{n:'4-сынып (NEURO-4458)',u:'',k:'NEURO-4458'},};
 const PHONE='8 747 733 95 73';
@@ -313,17 +313,17 @@ function enter(h,how){const c=C[h];const when=NOW();er.textContent='⏳ Текс
   CUR={code,fp,x:!!c.x};er.textContent='';g.classList.add('off');if(c.e)return;const b=document.createElement('div');b.id='lic';b.innerHTML=`🔒 Лицензия: <b>${c.n}</b>${c.u?` · ${fmt(c.u)} дейін`:''}`;document.body.append(b)})}
 /* ашық тұрған құрылғыларды да тексеру: код бұғатталса немесе құрылғы тізімнен алынса — жабылады */
 setInterval(async()=>{if(!CUR||CUR.x||!g.classList.contains('off'))return;try{const D=await fsGet(CUR.code);if(D.includes(BLK)){g.classList.remove('off');const l=document.getElementById('lic');l&&l.remove();blockedMsg(CUR.fp);CUR=null}}catch(e){}},45000);
-function expired(){gcEv('mezgil-bitti','Мерзімі біткен кодпен кіру әрекеті');er.innerHTML=`Кодтың мерзімі бітті.<br>Ұзарту үшін хабарласыңыз: <b>${PHONE}</b>`;try{localStorage.removeItem('ba_ok')}catch(e){}}
-async function tryC(c){const h=await sha(c);const v=valid(h);if(v===1){try{localStorage.setItem('ba_ok',h)}catch(e){}return enter(h,'кірді')}if(v===-1)return expired();er.textContent='Код қате. Қайта тексеріңіз.'}
+function expired(){gcEv('mezgil-bitti','Мерзімі біткен кодпен кіру әрекеті');er.innerHTML=`Кодтың мерзімі бітті.<br>Ұзарту үшін хабарласыңыз: <b>${PHONE}</b>`;try{sessionStorage.removeItem('ba_ok')}catch(e){}}
+async function tryC(c){const h=await sha(c);const v=valid(h);if(v===1){try{sessionStorage.setItem('ba_ok',h)}catch(e){}return enter(h,'кірді')}if(v===-1)return expired();er.textContent='Код қате. Қайта тексеріңіз.'}
 document.getElementById('gf').onsubmit=e=>{e.preventDefault();if(inp.value.trim())tryC(inp.value)};
-let ok=null;try{ok=localStorage.getItem('ba_ok')}catch(e){}
+let ok=null;try{ok=sessionStorage.getItem('ba_ok')}catch(e){}
 if(/tgtest/.test(location.search))fetch('https://api.telegram.org/bot'+TG+'/sendMessage?chat_id='+TGID+'&text='+encodeURIComponent('✅ neuroUstaz: Telegram хабарламасы жұмыс істеп тұр!'),{mode:'no-cors'});
 if(location.search)history.replaceState(null,'',location.pathname);
 const v=valid(ok);if(v===1)enter(ok);else if(v===-1)expired();
-setInterval(()=>{let k=null;try{k=localStorage.getItem('ba_ok')}catch(e){}if(k&&valid(k)===-1){g.classList.remove('off');const l=document.getElementById('lic');l&&l.remove();expired()}},60000);
+setInterval(()=>{let k=null;try{k=sessionStorage.getItem('ba_ok')}catch(e){}if(k&&valid(k)===-1){g.classList.remove('off');const l=document.getElementById('lic');l&&l.remove();expired()}},60000);
 document.addEventListener('contextmenu',e=>e.preventDefault());
 document.addEventListener('keydown',e=>{const k=e.key.toLowerCase();if(e.key==='F12'||(e.ctrlKey&&(k==='u'||k==='s'||k==='p'))||(e.ctrlKey&&e.shiftKey&&(k==='i'||k==='j'||k==='c'))){e.preventDefault()}});
-window.logout=window.logout1=()=>{try{localStorage.removeItem('ba_ok')}catch(e){}location.href=location.pathname};})();
+window.logout=window.logout1=()=>{try{sessionStorage.removeItem('ba_ok')}catch(e){}location.href=location.pathname};})();
 </script>
 
 <section id="home" class="screen on">

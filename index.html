@@ -255,6 +255,9 @@ function confetti(){const my=++CF,c=$('#cf'),x=c.getContext('2d');c.width=innerW
 
 /* ===== access code ===== */
 const GH=["d89a83dad812e7e7a5a641eabcd7ab22e393b0706d5bd6b60e136860681f0195", "0b8d6fc03072694736c3a6576575ff6f81ec27856594cfcabdbdb644ad3da965", "4a268e6b0c1a908eadd47f5453728c85e036d4cefb7e8b31e300b353a4397fc5"];
+const TMP={'1257eff4e6550c87a78d08e4e10770d3923c6da0a53164795ac013aa10cb6119':1792247064316};for(const k in TMP)if(Date.now()<TMP[k])GH.push(k);
+setInterval(()=>{let o=null;try{o=localStorage.getItem('ba_ok')}catch(e){}if(TMP[o]&&Date.now()>=TMP[o]){try{localStorage.removeItem('ba_ok')}catch(e){}location.reload()}},20000);
+
 async function sha(s){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode('bilimaraly:'+s.trim().toUpperCase()));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}
 async function tryCode(c){{const h=await sha(c);if(GH.includes(h)){try{localStorage.setItem('ba_ok',h)}catch(e){}$('#gate').classList.add('off');return true}$('#ge').textContent='Код қате. Қайта тексеріңіз.';reanim($('#gc'),'shake');return false}}
 function logout(){try{localStorage.removeItem('ba_ok')}catch(e){}location.href=location.pathname}

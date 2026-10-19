@@ -224,7 +224,7 @@ button{font-family:inherit;border:none;cursor:pointer;color:inherit;touch-action
   <input id="gc" autocomplete="off" spellcheck="false" placeholder="КОД"><button class="btn g">Кіру ➜</button><div class="gerr" id="ge"></div></form></div>
 <script id="gatejs">try{localStorage.removeItem('ba_ok')}catch(e){}
 (function(){/* код → иесі, мерзімі (сол күннің соңына дейін) */
-const C={'72258532b86defbd81e5e552bcd496852140d747559b8990b9aecac6d80629ee':{n:'Шарипхан Бакытнур',u:'',k:'BAKYTNUR3665'},'aeb1962fc1280cf13229a34835b78ce252850d5a21539baa41c8be67deae0d64':{n:'Нурдаулет',u:'',k:'NURDAULET5457',x:1},'3d43a93cfad57d25ee42b7f7943d3fc9a57b71acb1f77e2c739752ba35f03b83':{n:'Демегенова Нұргүл',u:'',k:'NURGUL6308'},'b8bd6f74abcd237e90bd207f0386d456d06269839b008b3019a29a28c286ca7e':{n:'Назерке',u:'',k:'NAZERKE1128'},'846e5541a1468460ddf255863abc14a9f1170ccca092b5ae48bc791ded8e016b':{n:'Айгүл Елжасқызы',u:'',k:'AIGUL4407'}};
+const C={'72258532b86defbd81e5e552bcd496852140d747559b8990b9aecac6d80629ee':{n:'Шарипхан Бакытнур',u:'',k:'BAKYTNUR3665',d:4},'aeb1962fc1280cf13229a34835b78ce252850d5a21539baa41c8be67deae0d64':{n:'Нурдаулет',u:'',k:'NURDAULET5457',x:1},'3d43a93cfad57d25ee42b7f7943d3fc9a57b71acb1f77e2c739752ba35f03b83':{n:'Демегенова Нұргүл',u:'',k:'NURGUL6308'},'b8bd6f74abcd237e90bd207f0386d456d06269839b008b3019a29a28c286ca7e':{n:'Назерке',u:'',k:'NAZERKE1128'},'846e5541a1468460ddf255863abc14a9f1170ccca092b5ae48bc791ded8e016b':{n:'Айгүл Елжасқызы',u:'',k:'AIGUL4407'}};
 const PHONE='8 747 733 95 73';
 const DEV=(()=>{let d=null;try{d=localStorage.getItem('dev_id')}catch(e){}if(!d){d=Math.random().toString(36).slice(2,6).toUpperCase();try{localStorage.setItem('dev_id',d)}catch(e){}}return d})();
 const DEVNAME=(()=>{const u=navigator.userAgent,tp=navigator.maxTouchPoints||0,W=Math.max(screen.width,screen.height);
@@ -293,9 +293,9 @@ function tgSend(txt,code){const kb={inline_keyboard:[[{text:'🔓 Firebase-те 
 async function devWatch(code,name,fp,line,desc,nolim){try{const fps=await fsGet(code);
   if(!nolim&&fps.includes(BLK))return 'blocked';
   if(fps.includes(fp))return 'ok';
-  if(nolim||fps.length<LIMIT){fps.push(fp);await fsPut(code,fps,name);return 'ok'}
+  const LM=window.__lim||LIMIT;if(nolim||fps.length<LM){fps.push(fp);await fsPut(code,fps,name);return 'ok'}
   const old=fps.slice();fps.push(BLK,fp);await fsPut(code,fps,name);
-  tgSend(`⛔ ${code} · ${name}\nКод ${LIMIT+1}-ші құрылғыдан ашылды — код БАРЛЫҚ құрылғыда бұғатталды!\n\nЖаңа құрылғы (із ${fp}):\n${line}\n\nБұрынғы құрылғылар: ${old.join(', ')}\n\n🔓 Рұқсат беру: төмендегі батырма → fps тізімінен «⛔» жолын өшіріңіз.\nЖаңа құрылғыға (${fp}) рұқсат бермесеңіз, оны да өшіріңіз — бірақ ол қайта кірсе, код тағы бұғатталады.`,code);
+  tgSend(`⛔ ${code} · ${name}\nКод ${LM+1}-ші құрылғыдан ашылды — код БАРЛЫҚ құрылғыда бұғатталды!\n\nЖаңа құрылғы (із ${fp}):\n${line}\n\nБұрынғы құрылғылар: ${old.join(', ')}\n\n🔓 Рұқсат беру: төмендегі батырма → fps тізімінен «⛔» жолын өшіріңіз.\nЖаңа құрылғыға (${fp}) рұқсат бермесеңіз, оны да өшіріңіз — бірақ ол қайта кірсе, код тағы бұғатталады.`,code);
   return 'blocked';
 }catch(e){return 'ok'}}
 function blockedMsg(fp){er.innerHTML=`⛔ Бұл код уақытша бұғатталды:<br>рұқсат етілгеннен көп құрылғыдан кірілді.<br>Рұқсат алу үшін хабарласыңыз: <b>${PHONE}</b><br><small style="color:#888">Құрылғы ізі: ${fp||''}</small>`}
@@ -305,7 +305,7 @@ const g=document.getElementById('gate'),inp=document.getElementById('gc'),er=doc
 const valid=h=>{const c=C[h];if(!c)return 0;if(c.e&&Date.now()>c.e)return -1;if(c.u&&new Date()>new Date(c.u+'T23:59:59'))return -1;return 1};
 const fmt=d=>d.split('-').reverse().join('.');
 let CUR=null;
-function enter(h,how){const c=C[h];const when=NOW();er.textContent='⏳ Тексерілуде…';
+function enter(h,how){const c=C[h];window.__lim=c.d||LIMIT;const when=NOW();er.textContent='⏳ Тексерілуде…';
  Promise.all([FP,MODEL,NET]).then(async([fp,md,ip])=>{window.__fp=fp;const dev=(md?(md.startsWith(DEVNAME)?md:DEVNAME+' '+md):DEVNAME);const code='4class-'+(c.k||'?');
   const res=await Promise.race([devWatch(code,c.n,fp,'🕐 '+when+'\n📱 '+dev+' · '+screen.width+'×'+screen.height+' · із '+fp+'\n🌐 '+ip,dev+' · '+screen.width+'×'+screen.height+' · '+ip+' · '+when,!!c.x),new Promise(r=>setTimeout(()=>r('ok'),7000))]);
   gcEv('4class-kod-'+(c.k||'?')+' | '+when+' | '+(res==='blocked'?'БҰҒАТТАЛДЫ':res==='denied'?'ТЫЙЫМ':(how||'ашылды'))+' | із '+fp+' | '+dev+' · '+screen.width+'×'+screen.height+' · '+GPU+' | '+ip,c.n+(res==='blocked'?' – бұғатталған':res==='denied'?' – рұқсатсыз құрылғы':how==='кірді'?' – кодпен кірді':' – сайтты ашты')+' · құрылғы '+DEV);
